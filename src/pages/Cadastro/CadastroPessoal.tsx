@@ -27,7 +27,10 @@ const CadastroPessoal = () => {
             id="campo-nome"
             placeholder="Digite seu nome completo"
             type="text"
-            {...register('nome')}
+            {...register('nome', {
+              required: true,
+              minLength: 5
+            })}
           />
         </Fieldset>
         <Fieldset>
@@ -46,7 +49,10 @@ const CadastroPessoal = () => {
             id="campo-telefone"
             type="text"
             placeholder="Ex: (DDD) XXXXX-XXXX"
-            {...register('telefone')}
+            {...register('telefone', {
+              pattern: /^\(\d{2,3}\) \d{5}-\d{4}$/,
+              required: true,
+            })}
           />
         </Fieldset>
 
