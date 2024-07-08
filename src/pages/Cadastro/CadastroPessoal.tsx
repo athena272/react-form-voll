@@ -1,13 +1,26 @@
 import { Button, Label, Fieldset, Input, Form, Titulo } from "../../components";
 import { useForm } from "react-hook-form";
+
+interface FormInputTipos {
+  nome: string;
+  email: string;
+  telefone: string;
+  senha: string;
+  senhaVerificada: string;
+}
+
 const CadastroPessoal = () => {
-  const { register, handleSubmit } = useForm();
-  console.log("🚀 ~ CadastroPessoal ~ register:", register)
+  const { register, handleSubmit } = useForm<FormInputTipos>();
+  // console.log("🚀 ~ CadastroPessoal ~ register:", register)
+
+  const onSubmitForm = (data: FormInputTipos) => {
+    console.log(data)
+  }
 
   return (
     <>
       <Titulo>Insira alguns dados básicos:</Titulo>
-      <Form>
+      <Form onSubmit={handleSubmit(onSubmitForm)}>
         <Fieldset>
           <Label htmlFor="campo-nome">Nome</Label>
           <Input
@@ -42,7 +55,7 @@ const CadastroPessoal = () => {
           <Input
             id="campo-senha"
             placeholder="Crie uma senha"
-            type="password" 
+            type="password"
             {...register('senha')}
           />
         </Fieldset>
