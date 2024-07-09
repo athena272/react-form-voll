@@ -11,10 +11,18 @@ interface FormInputTipos {
 
 const CadastroPessoal = () => {
   const { register, handleSubmit } = useForm<FormInputTipos>();
-  // console.log("🚀 ~ CadastroPessoal ~ register:", register)
 
   const onSubmitForm = (data: FormInputTipos) => {
     console.log(data)
+  }
+
+  function validarEmail(valor: string) {
+    const formatoEmail = /^[^\s@]+@alura\.com\.br$/;
+    if (!formatoEmail.test(valor)) {
+      console.error("Endereço de email é inválido para este domínio");
+      return false;
+    }
+    return true;
   }
 
   return (
@@ -39,7 +47,10 @@ const CadastroPessoal = () => {
             id="campo-email"
             placeholder="Insira seu endereço de email"
             type="email"
-            {...register('email')}
+            {...register('email', {
+              required: true,
+              validate: validarEmail
+            })}
           />
         </Fieldset>
 
