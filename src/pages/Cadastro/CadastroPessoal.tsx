@@ -50,6 +50,7 @@ const CadastroPessoal = () => {
             {...register('email', {
               required: true,
               validate: validarEmail
+              // validate: value => validarEmail(value)
             })}
           />
         </Fieldset>
