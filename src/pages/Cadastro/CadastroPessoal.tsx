@@ -1,5 +1,6 @@
 import { Button, Label, Fieldset, Input, Form, Titulo, ErrorMessage } from "../../components";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
+import InputMask from "../../components/InputMask";
 
 interface FormInputTipos {
   nome: string;
@@ -14,7 +15,8 @@ const CadastroPessoal = () => {
     register,
     handleSubmit,
     formState: { errors },
-    watch
+    watch,
+    control
   } = useForm<FormInputTipos>();
 
   const senha = watch("senha")
@@ -23,7 +25,7 @@ const CadastroPessoal = () => {
     tamanhoMinimo: (val: string) => val.length >= 6 || "A senha deve ter pelo menos 6 caracteres",
     senhaIguais: (val: string) => val === senha || "As senhas não correspondem",
   };
-  
+
   function validarEmail(valor: string) {
     const formatoEmail = /^[^\s@]+@alura\.com\.br$/;
     if (!formatoEmail.test(valor)) {
@@ -36,7 +38,7 @@ const CadastroPessoal = () => {
   const onSubmitForm = (data: FormInputTipos) => {
     console.log(data)
   }
-  
+
   return (
     <>
       <Titulo>Insira alguns dados básicos:</Titulo>
@@ -81,27 +83,35 @@ const CadastroPessoal = () => {
             </ErrorMessage>
           }
         </Fieldset>
-        <Fieldset>
-          <Label>Telefone</Label>
-          <Input
-            id="campo-telefone"
-            type="text"
-            placeholder="Ex: (DDD) XXXXX-XXXX"
-            $error={!!errors.telefone}
-            {...register('telefone', {
-              pattern: {
-                value: /^\(\d{2,3}\) \d{5}-\d{4}$/,
-                message: "O telefone inserido está no formato incorreto",
-              },
-              required: "Campo de telefone é obrigatório",
-            })}
-          />
-          {errors.telefone &&
-            <ErrorMessage>
-              {errors.telefone.message}
-            </ErrorMessage>
-          }
-        </Fieldset>
+        <Controller
+          name="telefone"
+          control={control}
+          rules={{
+            pattern: {
+              value: /^\(\d{2,3}\) \d{5}-\d{4}$/,
+              message: "O telefone inserido está no formato incorreto",
+            },
+            required: "O campo telefone é obrigatório",
+          }}
+          render={({ field }) => (
+            <Fieldset>
+              <Label htmlFor="campo-telefone">Telefone</Label>
+              <InputMask
+                mask="(99) 99999-9999"
+                id="campo-telefone"
+                type="text"
+                placeholder="Ex: (DDD) XXXXX-XXXX"
+                $error={!!errors.telefone}
+                onChange={field.onChange}
+              />
+              {errors.telefone &&
+                <ErrorMessage>
+                  {errors.telefone.message}
+                </ErrorMessage>
+              }
+            </Fieldset>
+          )}
+        />
         <Fieldset>
           <Label htmlFor="campo-senha">Crie uma senha</Label>
           <Input
