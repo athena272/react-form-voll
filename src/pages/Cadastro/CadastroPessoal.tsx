@@ -17,6 +17,13 @@ const CadastroPessoal = () => {
     watch
   } = useForm<FormInputTipos>();
 
+  const senha = watch("senha")
+  const validaSenha = {
+    obrigatorio: (val: string) => !!val || "Por favor, insira a senha novamente",
+    tamanhoMinimo: (val: string) => val.length >= 6 || "A senha deve ter pelo menos 6 caracteres",
+    senhaIguais: (val: string) => val === senha || "As senhas não correspondem",
+  };
+  
   function validarEmail(valor: string) {
     const formatoEmail = /^[^\s@]+@alura\.com\.br$/;
     if (!formatoEmail.test(valor)) {
@@ -25,15 +32,6 @@ const CadastroPessoal = () => {
     }
     return true;
   }
-
-  const senha = watch("senha")
-  const validaSenha = {
-    obrigatorio: (val: string) =>
-      !!val || "Por favor, insira a senha novamente",
-    tamanhoMinimo: (val: string) =>
-      val.length >= 6 || "A senha deve ter pelo menos 6 caracteres",
-    senhaIguais: (val: string) => val === senha || "As senhas não correspondem",
-  };
 
   const onSubmitForm = (data: FormInputTipos) => {
     console.log(data)
