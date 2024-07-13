@@ -73,10 +73,11 @@ const CadastroEndereco = () => {
             id="campo-cep"
             placeholder="Insira seu CEP"
             type="text"
+            $error={!!errors.cep}
             {...register("cep")}
             onBlur={() => fetchEndereco(cepDigitado)}
           />
-          {errors.cep && 
+          {errors.cep &&
             <ErrorMessage>
               {errors.cep.message}
             </ErrorMessage>
@@ -90,6 +91,11 @@ const CadastroEndereco = () => {
             type="text"
             {...register("rua")}
           />
+          {errors.rua &&
+            <ErrorMessage>
+              {errors.rua.message}
+            </ErrorMessage>
+          }
         </Fieldset>
 
         <FormContainer>
@@ -101,6 +107,11 @@ const CadastroEndereco = () => {
               type="text"
               {...register("numero")}
             />
+            {errors.numero &&
+              <ErrorMessage>
+                {errors.numero.message}
+              </ErrorMessage>
+            }
           </Fieldset>
           <Fieldset>
             <Label htmlFor="campo-bairro">Bairro</Label>
@@ -110,6 +121,11 @@ const CadastroEndereco = () => {
               type="text"
               {...register("bairro")}
             />
+            {errors.bairro && 
+            <ErrorMessage>
+              {errors.bairro.message}
+            </ErrorMessage>
+          }
           </Fieldset>
         </FormContainer>
         <Fieldset>
@@ -120,6 +136,11 @@ const CadastroEndereco = () => {
             type="text"
             {...register("localidade")}
           />
+          {errors.localidade && 
+            <ErrorMessage>
+              {errors.localidade.message}
+            </ErrorMessage>
+          }
         </Fieldset>
         <Button type="submit">Cadastrar</Button>
       </Form>
