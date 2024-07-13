@@ -1,6 +1,7 @@
 import { useForm } from "react-hook-form";
 import {
   Button,
+  ErrorMessage,
   Fieldset,
   Form,
   FormContainer,
@@ -18,7 +19,45 @@ interface FormInputEndereco {
 }
 
 const CadastroEndereco = () => {
-  const { register, handleSubmit } = useForm<FormInputEndereco>()
+  const {
+    register,
+    handleSubmit,
+    setError,
+    setValue,
+    watch,
+    formState: { errors },
+  } = useForm<FormInputEndereco>()
+
+  const cepDigitado = watch('cep')
+
+  const fetchEndereco = async (cep: string) => {
+    if (!cep) {
+      setError("cep", {
+        type: "manual",
+        message: "Cep inválido",
+      });
+
+      return
+    }
+
+    try {
+      const response = await fetch(`http://viacep.com.br/ws/${cep}/json/`)
+      const data = await response.json()
+
+      if (response.ok) {
+        setValue("rua", data.logradouro)
+        setValue("localidade", `${data.localidade}, ${data.uf}`);
+        setValue("bairro", data.bairro);
+      } else {
+        throw new Error("Cep inválido");
+      }
+
+      console.log(data)
+    } catch (error) {
+      console.log(error)
+    }
+
+  }
 
   const onSubmitForm = (data: FormInputEndereco) => {
     console.log(data)
@@ -35,7 +74,13 @@ const CadastroEndereco = () => {
             placeholder="Insira seu CEP"
             type="text"
             {...register("cep")}
+            onBlur={() => fetchEndereco(cepDigitado)}
           />
+          {errors.cep && 
+            <ErrorMessage>
+              {errors.cep.message}
+            </ErrorMessage>
+          }
         </Fieldset>
         <Fieldset>
           <Label htmlFor="campo-rua">Rua</Label>
