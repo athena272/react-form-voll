@@ -1,4 +1,4 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import {
   Button,
   ErrorMessage,
@@ -9,6 +9,7 @@ import {
   Label,
   Titulo,
 } from "../../components";
+import InputMask from "../../components/InputMask";
 
 interface FormInputEndereco {
   cep: string;
@@ -25,8 +26,18 @@ const CadastroEndereco = () => {
     setError,
     setValue,
     watch,
+    control,
     formState: { errors },
-  } = useForm<FormInputEndereco>()
+  } = useForm<FormInputEndereco>({
+    mode: 'all',
+    defaultValues: {
+      cep: "",
+      rua: "",
+      bairro: "",
+      numero: "",
+      localidade: "",
+    },
+  })
 
   const cepDigitado = watch('cep')
 
@@ -67,29 +78,43 @@ const CadastroEndereco = () => {
     <>
       <Titulo>Agora, mais alguns dados sobre você:</Titulo>
       <Form onSubmit={handleSubmit(onSubmitForm)}>
-        <Fieldset>
-          <Label htmlFor="campo-cep">CEP</Label>
-          <Input
-            id="campo-cep"
-            placeholder="Insira seu CEP"
-            type="text"
-            $error={!!errors.cep}
-            {...register("cep")}
-            onBlur={() => fetchEndereco(cepDigitado)}
-          />
-          {errors.cep &&
-            <ErrorMessage>
-              {errors.cep.message}
-            </ErrorMessage>
-          }
-        </Fieldset>
+        <Controller
+          name="cep"
+          control={control}
+          rules={{
+            required: "O campo de CEP é obrigatório"
+          }}
+          render={({ field }) => (
+            <Fieldset>
+              <Label htmlFor="campo-cep">CEP</Label>
+              <InputMask
+                mask="99999-999"
+                id="campo-cep"
+                placeholder="Insira seu CEP"
+                type="text"
+                $error={!!errors.cep}
+                onChange={field.onChange}
+                onBlur={() => fetchEndereco(cepDigitado)}
+              />
+              {errors.cep &&
+                <ErrorMessage>
+                  {errors.cep.message}
+                </ErrorMessage>
+              }
+            </Fieldset>
+          )}
+        />
+
         <Fieldset>
           <Label htmlFor="campo-rua">Rua</Label>
           <Input
             id="campo-rua"
             placeholder="Rua Agarikov"
             type="text"
-            {...register("rua")}
+            $error={!!errors.rua}
+            {...register("rua", {
+              required: "O campo de rua é obrigatório"
+            })}
           />
           {errors.rua &&
             <ErrorMessage>
@@ -105,7 +130,10 @@ const CadastroEndereco = () => {
               id="campo-numero-rua"
               placeholder="Ex: 1440"
               type="text"
-              {...register("numero")}
+              $error={!!errors.numero}
+              {...register("numero", {
+                required: "O campo de número é obrigatório"
+              })}
             />
             {errors.numero &&
               <ErrorMessage>
@@ -119,13 +147,16 @@ const CadastroEndereco = () => {
               id="campo-bairro"
               placeholder="Vila Mariana"
               type="text"
-              {...register("bairro")}
+              $error={!!errors.bairro}
+              {...register("bairro", {
+                required: "O campo de bairro é obrigatório"
+              })}
             />
-            {errors.bairro && 
-            <ErrorMessage>
-              {errors.bairro.message}
-            </ErrorMessage>
-          }
+            {errors.bairro &&
+              <ErrorMessage>
+                {errors.bairro.message}
+              </ErrorMessage>
+            }
           </Fieldset>
         </FormContainer>
         <Fieldset>
@@ -134,9 +165,12 @@ const CadastroEndereco = () => {
             id="campo-localidade"
             placeholder="São Paulo, SP"
             type="text"
-            {...register("localidade")}
+            $error={!!errors.localidade}
+            {...register("localidade", {
+              required: "O campo de localidade é obrigatório"
+            })}
           />
-          {errors.localidade && 
+          {errors.localidade &&
             <ErrorMessage>
               {errors.localidade.message}
             </ErrorMessage>
