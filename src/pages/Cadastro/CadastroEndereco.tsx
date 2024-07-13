@@ -10,6 +10,7 @@ import {
   Titulo,
 } from "../../components";
 import InputMask from "../../components/InputMask";
+import { useEffect } from "react";
 
 interface FormInputEndereco {
   cep: string;
@@ -27,7 +28,8 @@ const CadastroEndereco = () => {
     setValue,
     watch,
     control,
-    formState: { errors },
+    reset,
+    formState: { errors, isSubmitSuccessful },
   } = useForm<FormInputEndereco>({
     mode: 'all',
     defaultValues: {
@@ -38,6 +40,10 @@ const CadastroEndereco = () => {
       localidade: "",
     },
   })
+
+  useEffect(() => {
+    reset();
+  }, [reset, isSubmitSuccessful])
 
   const cepDigitado = watch('cep')
 
