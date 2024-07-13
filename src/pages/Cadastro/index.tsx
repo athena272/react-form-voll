@@ -1,10 +1,11 @@
-import CadastroPessoal from "./CadastroPessoal";
+// import CadastroPessoal from "./CadastroPessoal";
+import CadastroEndereco from "./CadastroEndereco";
 import { Logotipo } from "../../components";
 export default function Cadastro() {
   return (
     <>
       <Logotipo />
-      <CadastroPessoal />
+      <CadastroEndereco />
     </>
   );
 }
